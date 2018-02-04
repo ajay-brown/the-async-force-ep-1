@@ -47,24 +47,34 @@ const oReq5 = new XMLHttpRequest();
 const oReq6 = new XMLHttpRequest();
 
 function getFilms() {
+  function getFilmPlanets() {
+    const planets = JSON.parse(this.responseText);
+    const planetList = [];
+    for (var i = 0; i < planets.results.length; i++) {
+      planetList.push(planets.results[i].name + " index of " + i);
+    }
+    console.log(planetList);
+  }
   const films = JSON.parse(this.responseText);
   const filmList = [];
   for (var i = 0; i < 7; i++) {
     filmList.push(films.results[i].title);
   }
-  for (var j = 0; j < filmList.length; j++) {
-    let entry = document.createElement("li");
+  for (var j = 0; j < 7; j++) {
+    let entry = document.createElement("ul");
     entry.appendChild(document.createTextNode(filmList[j]));
     document.getElementById("filmList").appendChild(entry);
+    let planetList2 = films.results[j].planets;
+
+    var req = new XMLHttpRequest();
+    req.open("GET", planetList2, true);
+    req.addEventListener("load", planetList2);
+
+    let entry2 = document.createElement("li");
+    entry2.appendChild(document.createTextNode(planetList2 + ""));
+    document.getElementsByTagName("ul")[j].appendChild(entry2);
   }
 
-  function getFilmPlanets() {
-    const planets = JSON.parse(this.responseText);
-    const planetList = [];
-    for (var i = 0; i < 10; i++) {
-      planetList.push(planets.results[i].name);
-    }
-  }
   oReq6.addEventListener("load", getFilmPlanets);
   oReq6.open("GET", "https://swapi.co/api/planets/");
   oReq6.send();
